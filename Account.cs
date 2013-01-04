@@ -9,6 +9,7 @@ namespace Folkbanken
     {
         private int accountNumber;
         private double money;
+        List<Transaction> transactions = new List<Transaction>();
 
         public Account() //constructor (?)
         {
@@ -32,6 +33,24 @@ namespace Folkbanken
             return accountNumber;
         }
 
+
+        //kod för Labb3
+
+        public void DepositMoney(double pengar) 
+        {
+            Transaction transact = new Transaction("deposit", pengar, DateTime.Now);
+            transactions.Add(transact);
+            double tempMoney = GetCurrentMoney() + pengar;
+            SetCurrentMoney(tempMoney);
+        }
+
+        public void WithdrawMoney(double pengar) 
+        {
+            Transaction transact = new Transaction("withdraw", pengar, DateTime.Now);
+            transactions.Add(transact);
+            double tempMoney = GetCurrentMoney() - pengar;
+            SetCurrentMoney(tempMoney);
+        }
     }
 
 
