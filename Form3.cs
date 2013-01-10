@@ -24,9 +24,10 @@ namespace Folkbanken
         private void button1_Click(object sender, EventArgs e)
         {
             string[] PersonInfoArray = System.IO.File.ReadAllLines(infoChangeNumber + ".txt");
-            PersonInfoArray[changeIndex] = textBox8.Text;
+            PersonInfoArray[changeIndex] = textBox8.Text; //information från Form1, förnamn = 0, efternamn = 1 osv
 
-            FileStream fs = new FileStream(infoChangeNumber + ".txt", FileMode.Create, FileAccess.Write); //create skriver över den gamla filen            
+            //Skriver om fil med ny array med ändrad info
+            FileStream fs = new FileStream(infoChangeNumber + ".txt", FileMode.Create, FileAccess.Write); 
             StreamWriter sw = new StreamWriter(fs);
             
             for (int i = 0; i < PersonInfoArray.Length; i++ )
@@ -42,12 +43,6 @@ namespace Folkbanken
         private void Form3_Load(object sender, EventArgs e)
         {
         }
-
-        private void label10_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             Close();

@@ -11,7 +11,7 @@ namespace Folkbanken
         private double money;
         List<Transaction> transactions = new List<Transaction>();
 
-        public Account() //constructor (?)
+        public Account()
         {
             Random rnd = new Random();
             accountNumber = rnd.Next(10000, 100000);
@@ -33,9 +33,7 @@ namespace Folkbanken
             return accountNumber;
         }
 
-
         //kod för Labb3
-
         public void DepositMoney(double pengar) 
         {
             Transaction transact = new Transaction("deposit", pengar, DateTime.Now);

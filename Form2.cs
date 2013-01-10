@@ -29,7 +29,7 @@ namespace Folkbanken
             }            
         }
 
-        private void PopulateAccountList()
+        private void PopulateAccountList() //används för att hämta info/uppdatera lista
         {
             FileStream fs = new FileStream("kontolista.txt", FileMode.Open, FileAccess.Read);
             StreamReader sr = new StreamReader(fs);
@@ -42,16 +42,16 @@ namespace Folkbanken
             fs.Close();
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void button3_Click(object sender, EventArgs e) //lägger till konto
         {            
             if (comboBox1.Text == "Privatkonto")
             {
-                PrivateAccount NewAccount = new PrivateAccount();
+                PrivateAccount NewAccount = new PrivateAccount(); //nytt KONTO, namn på fil beror på val av KUND och kontotyp
                 FileStream fs = new FileStream("Privat_" + (listBox1.SelectedItem.ToString() + "_" + (NewAccount.GetAccountNumber()) + ".txt"), FileMode.Append, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(fs);
                 sw.WriteLine("Privatkonto");
-                sw.WriteLine(NewAccount.GetAccountNumber());
-                sw.WriteLine(NewAccount.GetCurrentMoney());
+                sw.WriteLine(NewAccount.GetAccountNumber()); //skriver in kontonummer
+                sw.WriteLine(NewAccount.GetCurrentMoney()); //skriver in pengar (default = 0)
                 sw.Close();
                 fs.Close();
                 FileStream fs2 = new FileStream("kontolista.txt", FileMode.Append, FileAccess.Write);
@@ -105,38 +105,15 @@ namespace Folkbanken
             }
             listBox2.Items.Clear();                
             PopulateAccountList();                      
-        }       
+        }               
 
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            listBox2.Items.Clear();
-            PopulateAccountList();
-            
-            string valdKund = "";
-            string[] kundArray = System.IO.File.ReadAllLines("kontolista.txt");
-            for (int i = 0; i < kundArray.Length; i++) //will crash if no item selected though
-            {
-
-                if (kundArray[i] == listBox1.SelectedItem.ToString()) //if kundArray[] == selected item on list
-                {
-                    valdKund = kundArray[i]; //set kundInfo to kundArray[i] (ex: 8501017852)
-                }
-            }
-            //tar reda på vilken kund som är vald i listbox           
- 
-
-        }
-
-        private void button4_Click(object sender, EventArgs e)
+        private void button4_Click(object sender, EventArgs e) //TAR BORT KONTO
         {
             if (listBox2.SelectedItem != null)
             {
-                string valtKonto = "";
+                string valtKonto =  listBox2.SelectedItem.ToString();
                 string[] kontoArray = System.IO.File.ReadAllLines("kontolista.txt");
-
-                valtKonto = listBox2.SelectedItem.ToString();
-
+                
                 for (int i = 0; i < kontoArray.Length; i++) //tar bort filen 903233435.txt
                 {
                     if (kontoArray[i] == listBox2.SelectedItem.ToString())
@@ -145,9 +122,11 @@ namespace Folkbanken
                         File.Delete(valtKonto + ".txt");
                     }
                 }
-                var oldInfo = System.IO.File.ReadAllLines("kontolista.txt");
+                var oldInfo = System.IO.File.ReadAllLines("kontolista.txt"); //använde var istället för string. Fungerade inte annars
                 var newInfo = kontoArray.Where(line => !line.Contains(valtKonto)); //tar bort valt nummer från kundlista
+                //newInfo = kontoArray minus valtKonto
                 System.IO.File.WriteAllLines("kontolista.txt", newInfo); //skriver om filen 
+
                 listBox2.Items.Clear();
                 PopulateAccountList();
             }
@@ -171,14 +150,15 @@ namespace Folkbanken
         textBox2.Text = Convert.ToString(KontoInfoArray[2]);        
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click(object sender, EventArgs e) //Sätter in pengar
         {
             string[] KontoInfoArray = System.IO.File.ReadAllLines(listBox2.SelectedItem.ToString() + ".txt");
+            //Skapar nytt konto med denna info: Kundnummer_ + Privatkonto_ + KontoNummer
    
             int transaction = int.Parse(textBox1.Text);   
             int moneyAvailible = int.Parse(KontoInfoArray[2]);
                         
-            KontoInfoArray[2] = Convert.ToString(moneyAvailible - transaction);
+            KontoInfoArray[2] = Convert.ToString(moneyAvailible - transaction); //Pengar MINUS vald summa pengar
             System.IO.File.WriteAllLines(listBox2.SelectedItem.ToString() + ".txt", KontoInfoArray);
             ShowSaldo(); 
         }
@@ -190,7 +170,7 @@ namespace Folkbanken
             int transaction = int.Parse(textBox1.Text);
             int moneyAvailible = int.Parse(KontoInfoArray[2]);
 
-            KontoInfoArray[2] = Convert.ToString(moneyAvailible + transaction);
+            KontoInfoArray[2] = Convert.ToString(moneyAvailible + transaction); //Pengar PLUS vald summa pengar
             System.IO.File.WriteAllLines(listBox2.SelectedItem.ToString() + ".txt", KontoInfoArray);
             ShowSaldo(); 
         }

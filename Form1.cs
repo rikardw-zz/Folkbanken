@@ -21,15 +21,12 @@ namespace Folkbanken
         }
 
         private void Form1_Load(object sender, EventArgs e)
-        {
-            PrivateAccount[] Person = new PrivateAccount[1000000];//creates new person array   
-            PopulateCustomerList();     
-            
+        {          
+            PopulateCustomerList();                 
         }
 
-        private void PopulateCustomerList() 
+        private void PopulateCustomerList() //Adds items form kundlista.txt to listbox
         {
-           // FileInfo fil = new FileInfo("kundlista.txt"); //FileInfo gets file statistics. It retrieves information about a specific file or directory from the file system in a C# program
             FileStream fs = new FileStream("kundlista.txt", FileMode.Open, FileAccess.Read);
             StreamReader sr = new StreamReader(fs);
                         
@@ -38,17 +35,15 @@ namespace Folkbanken
                listBox1.Items.Add(sr.ReadLine());//add one item. Item = text per line 
            
             }
-            //Adds items form kundlista.txt to listbox
-            //the listbox also sorts them (selected on menu)
+            
             sr.Close();
             fs.Close();
         }
 
 
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            
+        private void button1_Click(object sender, EventArgs e)//Knapp som lägger till folk
+        {            
             Customer NewUser = new Customer(textBox1.Text, textBox2.Text, textBox3.Text, textBox4.Text, textBox5.Text, textBox6.Text, textBox7.Text); //creates variable Customer from Customer.Class Also creater NewUser from said variable        
             string personInfo = Convert.ToString(NewUser.GetId());
 
@@ -73,21 +68,8 @@ namespace Folkbanken
             fs.Close();
             sw2.Close();
             fs2.Close();
-
             listBox1.Items.Add(NewUser.GetId());
-
-            MessageBox.Show("Informationen har lagts till");
-            
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-         private void button3_Click(object sender, EventArgs e)
-        {
-            Close();
+            MessageBox.Show("Informationen har lagts till");            
         }
 
         private void button3_Click_1(object sender, EventArgs e)
@@ -96,7 +78,7 @@ namespace Folkbanken
             f2.Show();
         }
 
-        private void button6_Click(object sender, EventArgs e)
+        private void button6_Click(object sender, EventArgs e) //Knapp för ändring av info
         {
             if (comboBox1.Text == "")
             {
@@ -113,7 +95,7 @@ namespace Folkbanken
                     form3.infoChangeNumber = valdKund;
                     form3.Show();
 
-                    form3.label2.Text = PersonInfoArray[0];
+                    form3.label2.Text = PersonInfoArray[0]; //skickar info till labels i Form3
                     form3.textBox1.Text = PersonInfoArray[1];
                     form3.textBox2.Text = PersonInfoArray[2];
                     form3.textBox3.Text = PersonInfoArray[3];
@@ -122,10 +104,10 @@ namespace Folkbanken
                     form3.textBox6.Text = PersonInfoArray[6];
                     form3.textBox7.Text = PersonInfoArray[7];
 
-                    if (comboBox1.Text == "Förnamn")
+                    if (comboBox1.Text == "Förnamn") //ifsats för vilken information som skall ändras
                     {
                         form3.textBox8.Text = PersonInfoArray[1];
-                        form3.changeIndex = 1;
+                        form3.changeIndex = 1; //changeindex = informationen som ska ändras
                     }
                     else if (comboBox1.Text == "Efternamn")
                     {
