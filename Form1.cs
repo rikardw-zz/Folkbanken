@@ -112,7 +112,16 @@ namespace Folkbanken
 
           private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
           {
+              CustomerVal = (Customer)listBox1.SelectedItem;
               UpdateAccounts();
+              // lägger till info från customerval
+              textBox1.Text = CustomerVal.foreName;
+              textBox2.Text = CustomerVal.lastName;
+              textBox3.Text = CustomerVal.birthInfo;
+              textBox4.Text = CustomerVal.streetAdress;
+              textBox5.Text = CustomerVal.postAdress;
+              textBox6.Text = CustomerVal.homePhone;
+              textBox7.Text = CustomerVal.mobilePhone;
           }
 
           private void button2_Click(object sender, EventArgs e)
@@ -165,6 +174,23 @@ namespace Folkbanken
               }
               saveCustomers();
               UpdateAccounts();
+
+          }
+
+          private void button3_Click(object sender, EventArgs e)
+          {
+              //skriver om fil beroende på info i textboxar
+
+              CustomerVal.foreName = textBox1.Text;
+              CustomerVal.lastName = textBox2.Text;
+              CustomerVal.birthInfo = textBox3.Text;
+              CustomerVal.streetAdress = textBox4.Text;
+              CustomerVal.postAdress = textBox5.Text;
+              CustomerVal.homePhone = textBox6.Text;
+              CustomerVal.mobilePhone = textBox7.Text;
+
+              saveCustomers();
+              UpdatePeople();
 
           }
     }

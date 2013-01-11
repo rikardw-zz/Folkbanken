@@ -7,21 +7,16 @@ namespace Folkbanken
 {
     [Serializable] 
     class Account
-    {        
-        private int accountNumber;
-        private double money;
-        List<Transaction> transactions = new List<Transaction>();
+    {
+        public int accountNumber { get; set; }
+        public double money { get; set; }
+        public List<Transaction> transactions = new List<Transaction>();
 
         public Account()
         {
             Random rnd = new Random();
             accountNumber = rnd.Next(10000, 100000);
             money = 0;
-        }
-
-        public override string ToString() //returnerar denna info
-        {
-            return "Kontonummer:" + accountNumber + "   " + " Pengar: " + money;
         }
 
         public double GetCurrentMoney()
@@ -64,7 +59,12 @@ namespace Folkbanken
         private Card[] cards = new Card[100]; // allows PrivateAccount to have a large number of cards
         private double creditLimit; //sets a max credit to PrivateUser
         private double interest = 1.0340;
-       
+
+        public override string ToString() //returnerar denna info
+        {
+            return "Privatkonto:" + accountNumber + "\t" + " Pengar: " + money;
+        }
+
         public double GetMaxCredit()
         {
             return creditLimit;
@@ -88,6 +88,11 @@ namespace Folkbanken
             
             private double interest = 1.0440;                
             DateTime latestTransaction;
+
+            public override string ToString() //returnerar denna info
+            {
+                return "Framtidskonto:" + accountNumber + "\t" + " Pengar: " + money;
+            }
 
 
             public bool CheckTransactionFee() //function to see if the yearly transaction surpasses 
@@ -139,6 +144,11 @@ namespace Folkbanken
     {
         private Card[] cards = new Card[100]; //allows 0 to several cards
         double interest = 1.0325;
+
+        public override string ToString() //returnerar denna info
+        {
+            return "Servicekonto:" + accountNumber + "\t" + " Pengar: " + money;
+        }
 
         public bool SurpassingCredit()
         {
