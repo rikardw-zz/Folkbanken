@@ -234,6 +234,7 @@
             this.listBox2.Name = "listBox2";
             this.listBox2.Size = new System.Drawing.Size(241, 173);
             this.listBox2.TabIndex = 0;
+            this.listBox2.SelectedIndexChanged += new System.EventHandler(this.listBox2_SelectedIndexChanged);
             // 
             // button2
             // 
@@ -290,7 +291,7 @@
             // 
             this.textBox8.Location = new System.Drawing.Point(694, 240);
             this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(100, 20);
+            this.textBox8.Size = new System.Drawing.Size(139, 20);
             this.textBox8.TabIndex = 22;
             // 
             // button5
@@ -301,6 +302,7 @@
             this.button5.TabIndex = 23;
             this.button5.Text = "+";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button6
             // 
@@ -310,6 +312,7 @@
             this.button6.TabIndex = 24;
             this.button6.Text = "-";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
             // label9
             // 

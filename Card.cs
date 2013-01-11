@@ -8,8 +8,7 @@ namespace Folkbanken
     [Serializable]
     class Card
     {
-
-        private int cardNumber;
+        public int cardNumber {get; set;}
         private int CVCCode;
         private int PINCode;
         private DateTime expirationDate;

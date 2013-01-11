@@ -14,7 +14,8 @@ namespace Folkbanken
     public partial class Form1 : Form
     {
         private List<Customer> CustomerLista = new List<Customer>();
-        private Customer CustomerVal = new Customer();        
+        private Customer CustomerVal = new Customer();
+        private Account AccountVal = new Account();
 
         public Form1()
         {
@@ -192,6 +193,25 @@ namespace Folkbanken
               saveCustomers();
               UpdatePeople();
 
+          }
+
+          private void button5_Click(object sender, EventArgs e)
+          {
+              AccountVal.DepositMoney(Convert.ToDouble(textBox8.Text));
+              saveCustomers();
+              UpdateAccounts();
+          }
+
+          private void listBox2_SelectedIndexChanged(object sender, EventArgs e)
+          {
+              AccountVal = (Account)listBox2.SelectedItem;
+          }
+
+          private void button6_Click(object sender, EventArgs e)
+          {
+              AccountVal.WithdrawMoney(Convert.ToDouble(textBox8.Text));
+              saveCustomers();
+              UpdateAccounts();
           }
     }
 }
