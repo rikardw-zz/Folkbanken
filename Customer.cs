@@ -5,24 +5,29 @@ using System.Text;
 
 namespace Folkbanken
 {
-    class Customer
-    {
-        private int id;
-        private string foreName;
-        private string lastName;
-        private string birthInfo;
-        private string streetadress;
-        private string postadress;
-        private string homephone;
-        private string mobilephone;
-        private PrivateAccount[] privacc = new PrivateAccount[100];
-        private ServiceAccount[] servacc = new ServiceAccount[100];
-        private FutureAccount[] futureacct = new FutureAccount[100];         
+    [Serializable] //enables class to be serializable (for bin files)
 
-        public Customer(string tempLastName, string tempSurName, string tempBirthInfo, string tempStreetAdress, string tempPostAdress, string tempHomePhone, string tempMobilePhone)
+    class Customer
+    {      
+        public string foreName { get; set; }
+        public string lastName { get; set; }
+        public string birthInfo { get; set; }
+        public string streetAdress { get; set; }
+        public string postAdress { get; set; }
+        public string homePhone { get; set; }
+        public string mobilePhone { get; set; }
+        public List <PrivateAccount> privateAccounts = new List <PrivateAccount>();
+        public List<ServiceAccount> serviceAccounts = new List<ServiceAccount>();
+        public List<FutureAccount> futureAccounts = new List<FutureAccount>();
+
+        public override string ToString() //returnerar denna info
+        {
+            return foreName + " " + lastName;
+        }
+
+        /*public Customer(string tempLastName, string tempSurName, string tempBirthInfo, string tempStreetAdress, string tempPostAdress, string tempHomePhone, string tempMobilePhone)
         { //constructor, sends info to the private ints, encapsulation
             Random rnd = new Random();
-            id = rnd.Next(10000, 100000);
             foreName = tempLastName;
             lastName = tempSurName;
             birthInfo = tempBirthInfo;
@@ -31,75 +36,21 @@ namespace Folkbanken
             homephone = tempHomePhone;
             mobilephone = tempMobilePhone;
 
-        }
-
-        public void OpenAccount(string type) 
+        }*/
+        public void addPrivateAccount(PrivateAccount newAccount) //metod för nytt konto
         {
-            if (type == "Privatkonto")
-            {
-                PrivateAccount NewAccount = new PrivateAccount();                
-            }
-
-            else if (type == "Framtidskonto")
-            {
-                FutureAccount NewAccount = new FutureAccount();                
-            }
-            else if (type == "Servicekonto")
-            {
-                ServiceAccount NewAccount = new ServiceAccount();                
-            }
+            //privateAccounts = new List<PrivateAccount>();
+            privateAccounts.Add(newAccount);
         }
 
-        public string GetLastName() 
-        { 
-            return lastName; 
-        }
-
-
-        public string GetForeName() 
-        { 
-            return foreName;        
-        }
-
-
-        public string GetBirthInfo()
-        { 
-            return birthInfo;
-        }
-
-
-        public string GetStreetAdress() 
+        public void addServiceAccount(ServiceAccount newAccount) //metod för nytt konto
         {
-            return streetadress;        
+            serviceAccounts.Add(newAccount);
         }
 
-
-        public string GetPostAdress()
+        public void addFutureAccount(FutureAccount newAccount) //metod för nytt konto
         {
-            return postadress;
-        }
-
-
-        public string GetHomePhone() 
-        {
-            
-            return homephone;        
-        }
-
-
-        public string GetMobilePhone()
-        {
-            return mobilephone;
-        }
-
-        public int GetId()
-        {
-            return id;
-        }
-
-        public void OpenAccount(int accountType) //Creates/Opens an account
-        {
-            Account newAccount;    
-        }
+            futureAccounts.Add(newAccount);
+        }      
     } //end class Customer 
 }

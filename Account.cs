@@ -5,8 +5,9 @@ using System.Text;
 
 namespace Folkbanken
 {
+    [Serializable] 
     class Account
-    {
+    {        
         private int accountNumber;
         private double money;
         List<Transaction> transactions = new List<Transaction>();
@@ -16,6 +17,11 @@ namespace Folkbanken
             Random rnd = new Random();
             accountNumber = rnd.Next(10000, 100000);
             money = 0;
+        }
+
+        public override string ToString() //returnerar denna info
+        {
+            return "Kontonummer:" + accountNumber + "   " + " Pengar: " + money;
         }
 
         public double GetCurrentMoney()
@@ -51,7 +57,7 @@ namespace Folkbanken
         }
     }
 
-
+    [Serializable]
     class PrivateAccount : Account
     {
 
@@ -75,8 +81,8 @@ namespace Folkbanken
         {
             creditLimit = tempCreditLimit;                
         }        
-    }   
-
+    }
+    [Serializable]
     class FutureAccount : Account
         {
             
@@ -127,27 +133,28 @@ namespace Folkbanken
                 return awnser; // disables having credit
             }
         }
+    [Serializable]
+        
+    class ServiceAccount : Account
+    {
+        private Card[] cards = new Card[100]; //allows 0 to several cards
+        double interest = 1.0325;
 
-        class ServiceAccount : Account
+        public bool SurpassingCredit()
         {
-            private Card[] cards = new Card[100]; //allows 0 to several cards
-            double interest = 1.0325;
-
-            public bool SurpassingCredit()
+            bool awnser;
+            if (GetCurrentMoney() <= 0)
             {
-                bool awnser;
-                if (GetCurrentMoney() <= 0)
-                {
-                    awnser = true;
-                }
-                else
-                {
-                    awnser = false;
-                }
-                return awnser; // method fo disabling credit
+                awnser = true;
+            }
+            else
+            {
+                awnser = false;
+            }
+            return awnser; // method fo disabling credit
             
-            }                  
-        }
+        }                  
+    }
 }
 
 

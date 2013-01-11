@@ -1,6 +1,5 @@
-﻿// TESTADE EN DEL MED KODEN VIA FORM1 TILL EN BÖRJAN, VÄNLIGEN IGNORERA
-using System;                            
-using System.Collections.Generic; 
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -8,195 +7,165 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary; //makes binafyformatter work
 
 namespace Folkbanken
 {
     public partial class Form1 : Form
     {
-
+        private List<Customer> CustomerLista = new List<Customer>();
+        private Customer CustomerVal = new Customer();        
 
         public Form1()
         {
             InitializeComponent();
+            UpdatePeople();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {          
-            PopulateCustomerList();                 
-        }
 
-        private void PopulateCustomerList() //Adds items form kundlista.txt to listbox
+       private void button1_Click(object sender, EventArgs e) //lägger till en ny Customer till listan
         {
-            FileStream fs = new FileStream("kundlista.txt", FileMode.Open, FileAccess.Read);
-            StreamReader sr = new StreamReader(fs);
-                        
-            while (!sr.EndOfStream) //as long as ! end of stream
-            {
-               listBox1.Items.Add(sr.ReadLine());//add one item. Item = text per line 
-           
-            }
-            
-            sr.Close();
+            Customer newCustomer = new Customer { foreName = textBox1.Text, lastName = textBox2.Text, birthInfo = textBox3.Text, streetAdress = textBox4.Text, postAdress = textBox5.Text, homePhone = textBox6.Text, mobilePhone = textBox7.Text};
+            //creates new Customer from Customer class, sending info to get; set;
+            CustomerLista.Add(newCustomer); //adds items to list
+            CustomerVal = newCustomer; //sätter CustomerVal till senast skapta Customer.                      
+            saveCustomers();
+            UpdatePeople();
+        }
+ /*
+        private void Form1_Load(object sender, EventArgs e) //Startar i början, hämtar info från lista
+        {
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            FileStream fs = new FileStream("Customer.bin", FileMode.OpenOrCreate, FileAccess.Read);
+            BinaryFormatter bf = new BinaryFormatter();
             fs.Close();
+
+
         }
 
-
-
-        private void button1_Click(object sender, EventArgs e)//Knapp som lägger till folk
-        {            
-            Customer NewUser = new Customer(textBox1.Text, textBox2.Text, textBox3.Text, textBox4.Text, textBox5.Text, textBox6.Text, textBox7.Text); //creates variable Customer from Customer.Class Also creater NewUser from said variable        
-            string personInfo = Convert.ToString(NewUser.GetId());
-
-            FileStream fs = new FileStream(personInfo + ".txt", FileMode.Append, FileAccess.Write);
-            FileStream fs2 = new FileStream("kundlista.txt", FileMode.Append, FileAccess.Write);
-            StreamWriter sw = new StreamWriter(fs);
-            StreamWriter sw2 = new StreamWriter(fs2);
-
-            //info till kundfil
-            sw.WriteLine(NewUser.GetId());
-            sw.WriteLine(NewUser.GetForeName());
-            sw.WriteLine(NewUser.GetLastName());
-            sw.WriteLine(NewUser.GetBirthInfo());
-            sw.WriteLine(NewUser.GetStreetAdress());
-            sw.WriteLine(NewUser.GetPostAdress());
-            sw.WriteLine(NewUser.GetHomePhone());
-            sw.WriteLine(NewUser.GetMobilePhone());
-
-            sw2.WriteLine(NewUser.GetId()); //info till kundlista            
-            
-            sw.Close();
+        private void button3_Click(object sender, EventArgs e) //skapar konto
+        {
+            Konto nyttKonto = new Konto { money = textBox4.Text, kontoTyp = textBox5.Text };
+            CustomerVal.skaffaKonto(nyttKonto);
+            FileStream fs = new FileStream("Customer.bin", FileMode.OpenOrCreate, FileAccess.Write);
+            BinaryFormatter bf = new BinaryFormatter();
+            bf.Serialize(fs, CustomerLista); //adds info from CustomerLista
             fs.Close();
-            sw2.Close();
-            fs2.Close();
-            listBox1.Items.Add(NewUser.GetId());
-            MessageBox.Show("Informationen har lagts till");            
+            GetPeople();
+
         }
 
-        private void button3_Click_1(object sender, EventArgs e)
+       */
+       private void UpdatePeople()
         {
-            Form2 f2 = new Form2();
-            f2.Show();
-        }
-
-        private void button6_Click(object sender, EventArgs e) //Knapp för ändring av info
-        {
-            if (comboBox1.Text == "")
+            listBox1.Items.Clear();
+            FileStream fs = new FileStream("Customer.bin", FileMode.OpenOrCreate, FileAccess.Read);
+            BinaryFormatter bf = new BinaryFormatter();
+            try
             {
-                MessageBox.Show("Vänligen välj typ av kundinformation du vill ändra först");
+                CustomerLista = (List<Customer>)bf.Deserialize(fs); //hämtar alla Customers från listan
             }
-            else
+            catch
             {
-                if (listBox1.SelectedItem != null)
-                {
-                    string valdKund = listBox1.SelectedItem.ToString();
-                    string[] PersonInfoArray = System.IO.File.ReadAllLines(valdKund + ".txt");
-
-                    Form3 form3 = new Form3();
-                    form3.infoChangeNumber = valdKund;
-                    form3.Show();
-
-                    form3.label2.Text = PersonInfoArray[0]; //skickar info till labels i Form3
-                    form3.textBox1.Text = PersonInfoArray[1];
-                    form3.textBox2.Text = PersonInfoArray[2];
-                    form3.textBox3.Text = PersonInfoArray[3];
-                    form3.textBox4.Text = PersonInfoArray[4];
-                    form3.textBox5.Text = PersonInfoArray[5];
-                    form3.textBox6.Text = PersonInfoArray[6];
-                    form3.textBox7.Text = PersonInfoArray[7];
-
-                    if (comboBox1.Text == "Förnamn") //ifsats för vilken information som skall ändras
-                    {
-                        form3.textBox8.Text = PersonInfoArray[1];
-                        form3.changeIndex = 1; //changeindex = informationen som ska ändras
-                    }
-                    else if (comboBox1.Text == "Efternamn")
-                    {
-                        form3.textBox8.Text = PersonInfoArray[2];
-                        form3.changeIndex = 2;
-
-                    }
-                    else if (comboBox1.Text == "Personnummer")
-                    {
-                        form3.textBox8.Text = PersonInfoArray[3];
-                        form3.changeIndex = 3;
-                    }
-                    else if (comboBox1.Text == "Gatuadress")
-                    {
-                        form3.textBox8.Text = PersonInfoArray[4];
-                        form3.changeIndex = 4;
-                    }
-                    else if (comboBox1.Text == "Postadress")
-                    {
-                        form3.textBox8.Text = PersonInfoArray[5];
-                        form3.changeIndex = 5;
-                    }
-                    else if (comboBox1.Text == "Hemtelefon")
-                    {
-                        form3.textBox8.Text = PersonInfoArray[6];
-                        form3.changeIndex = 6;
-                    }
-                    else if (comboBox1.Text == "Mobiltelefon")
-                    {
-                        form3.textBox8.Text = PersonInfoArray[7];
-                        form3.changeIndex = 7;
-                    }
-                }
-                else 
-                {
-                    MessageBox.Show("Vänligen välj vilken kund du vill ändra informationen på först");
-                }
-
-            }            
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }//end button
-
-        private void GetChangedInfo()
-        {
-            // is supposed to get info from textbox in form 3
-
-        
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-            //******************************************************
-            //Knapp som får värde från val i listbox1, sedan tar bort fil med samma namn samt info från kundlista.txt
-            string valdKund = listBox1.SelectedItem.ToString();
-            string[] kundArray = System.IO.File.ReadAllLines("kundlista.txt");
-
-            for (int i = 0; i < kundArray.Length; i++) //tar bort filen 903233435.txt
-            {
-                if (kundArray[i] == listBox1.SelectedItem.ToString())
-                {
-                    File.Delete(valdKund + ".txt");                                   
-                }           
+                MessageBox.Show("Hittade inga kunder");
             }
-            //var oldInfo = System.IO.File.ReadAllLines("kundlista.txt");
-            var newInfo = kundArray.Where(line => !line.Contains(valdKund)); //tar bort valt Personummer från kundlista
-            System.IO.File.WriteAllLines("kundlista.txt", newInfo); //skriver om filen utan Personummer
-            
-            
-            listBox1.Items.Clear(); //tar bort alla objekt i listbox  
-            PopulateCustomerList();  
-                                        
+            fs.Close();
+            for (int i = 0; i < CustomerLista.Count(); i++)
+            {
+                listBox1.Items.Add(CustomerLista[i]);
+            }
         }
 
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            Close();
-        }
+       private void UpdateAccounts() 
+       {
+           listBox2.Items.Clear();
+           CustomerVal = (Customer)listBox1.SelectedItem;
 
-        private void groupBox1_Enter(object sender, EventArgs e)
-        {
+           for (int i = 0; i < CustomerVal.privateAccounts.Count(); i++)
+           {
+               listBox2.Items.Add(CustomerVal.privateAccounts[i]);
+           }
+           for (int i = 0; i < CustomerVal.futureAccounts.Count(); i++)
+           {
+               listBox2.Items.Add(CustomerVal.futureAccounts[i]);
+           }
+           for (int i = 0; i < CustomerVal.serviceAccounts.Count(); i++)
+           {
+               listBox2.Items.Add(CustomerVal.serviceAccounts[i]);
+           } 
+       }
 
-        }     
-    }        
-} 
-  
-    
+          private void button4_Click(object sender, EventArgs e)
+          {
+              //Hämtar vilken kund som är vald, tar bort den från listan och skriver om den nya listan på bin-fil
+              CustomerLista.Remove(CustomerVal);
+              FileStream fs = new FileStream("Customer.bin", FileMode.Open, FileAccess.Write);
+              BinaryFormatter bf = new BinaryFormatter();
+              bf.Serialize(fs, CustomerLista);   
+              fs.Close();
+              UpdatePeople();
+          }
 
+          private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+          {
+              UpdateAccounts();
+          }
 
+          private void button2_Click(object sender, EventArgs e)
+          {
+              CustomerVal = (Customer)listBox1.SelectedItem;
+              if (comboBox1.SelectedItem.ToString() == "Privatkonto")
+              {
+                  PrivateAccount pa = new PrivateAccount();
+                  CustomerVal.addPrivateAccount(pa);
+              }
+              else if (comboBox1.SelectedItem.ToString() == "Framtidskonto")
+              {
+                  FutureAccount fa = new FutureAccount();
+                  CustomerVal.addFutureAccount(fa);
+              
+              }
+              else if (comboBox1.SelectedItem.ToString() == "Servicekonto")
+              {
+                  ServiceAccount sa = new ServiceAccount();
+                  CustomerVal.addServiceAccount(sa);              
+              }
+              saveCustomers();
+              UpdateAccounts();
+          }
+
+          private void saveCustomers() {
+              FileStream fs = new FileStream("Customer.bin", FileMode.OpenOrCreate, FileAccess.Write);
+              BinaryFormatter bf = new BinaryFormatter();
+              bf.Serialize(fs, CustomerLista); //adds info from CustomerLista  
+              fs.Close();
+          }
+
+          private void button7_Click(object sender, EventArgs e) //knapp för att ta bort konton
+          {
+              string acType = listBox2.SelectedItem.GetType().ToString();
+              if (acType == "Folkbanken.PrivateAccount") 
+              {
+                  PrivateAccount pa = (PrivateAccount)listBox2.SelectedItem;
+                  CustomerVal.privateAccounts.Remove(pa);
+              }
+              if (acType == "Folkbanken.FutureAccount")
+              {
+                  FutureAccount pa = (FutureAccount)listBox2.SelectedItem;
+                  CustomerVal.futureAccounts.Remove(pa);
+              }
+              if (acType == "Folkbanken.ServiceAccount")
+              {
+                  ServiceAccount pa = (ServiceAccount)listBox2.SelectedItem;
+                  CustomerVal.serviceAccounts.Remove(pa);
+              }
+              saveCustomers();
+              UpdateAccounts();
+
+          }
+    }
+}

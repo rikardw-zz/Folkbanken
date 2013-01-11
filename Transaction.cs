@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Folkbanken
 {
+    [Serializable]
     class Transaction
     {         
         private string type; // "withdraw" or "deposit"
